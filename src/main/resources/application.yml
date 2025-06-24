@@ -1,0 +1,71 @@
+server:
+  port: 6587
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  tomcat:
+    basedir: ./temp  # 自定义临时目录
+    max-swallow-size: -1  # 禁用请求体swallowing，可能有助于解决文件处理问题
+    uri-encoding: UTF-8
+
+spring:
+  application:
+    name: file-share-app
+  datasource:
+    url: jdbc:mysql://1.94.58.29:3306/file_share?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      location: ./temp/uploads  # 指定上传文件的临时存储位置
+      file-size-threshold: 1MB  # 超过1MB的文件会被写入磁盘
+  # 解决Swagger在Spring Boot 2.7.x版本中的路径匹配问题
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+# Swagger配置
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
+    enabled: true
+    auto-startup: true
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: status
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+minio:
+  endpoint: http://1.94.58.29:9000
+  accessKey: tIO5YvnZ6pixISzfvbDr
+  secretKey: jO8iRDeabV0CtDlaOMqYw1OmIGGu1d9KpMIyPnsI
+  bucketName: file-storage
+  imageUrl:  https://minioshare.xmyio.cn
+
+
+jwt:
+  secret: fileshare123456
+  expiration: 7200000  # 2小时
+
+file:
+  expiration-days: 1  # 文件默认过期天数
+
+# 微信小程序配置
+wechat:
+  # 可以根据需要选择使用哪个小程序配置
+  appid: wx9584ebb39613f5ad
+  secret: b1d0d3064af6980b41ce504aeb81335c
